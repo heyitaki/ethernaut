@@ -4,6 +4,10 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+/** 
+ * The CoinFlip contract uses a known source of randomness, so we can use it to compute the
+ * outcome of a coin flip.
+ */
 contract Level3 {
   using SafeMath for uint256;
 
