@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "compile": "npx hardhat compile",
-    "deploy": "npx hardhat run scripts/deploy.ts --network ${NETWORK:-rinkeby}",
-    "solve": "NODE_OPTIONS=--openssl-legacy-provider npx ts-node --files src/Level3.ts",
+    "deploy": "npx hardhat run scripts/deploy.ts --network ${npm_config_network:-rinkeby}",
+    "solve": "npx hardhat run src/Level${npm_config_level}.ts --network ${npm_config_network:-rinkeby}",
     "test": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat test",
     "verify": "npx hardhat verify --network ${NETWORK:-rinkeby}"
   },
