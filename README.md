@@ -94,3 +94,12 @@ The `uint` type in Solidity is an unsigned integer and can never be negative. Ne
 ```typescript
 await contract.transfer('0x0000000000000000000000000000000000000000', 50);
 ```
+
+### 6. Delegate
+`delegatecall` is a function that allows us to pass data to and call methods from another contract. It differs from the more common `call` function in that it does not modify the state of the contract that is being called, only the state of the calling contract, which **must** have an identical storage layout as the contract being called. Indeed, we can see that the `Delegate` and `Delegation` contracts share slot0 of their storage. We can exploit this to call `pwn()` in the `Delegate` contract through the `delegatecall` in the fallback method of the `Delegation` contract, which will update the storage (ie the `owner` field) of the `Delegation` contract to our address.
+```typescript
+await contract.sendTransaction({
+  to: INSTANCE_ADDRESS,
+  data: web3.eth.abi.encodeFunctionSignature('pwn()'),
+});
+```
